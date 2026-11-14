@@ -1,8 +1,16 @@
 from fastapi import FastAPI, HTTPException
-from app.schema import PostCreate
+from app.schema import PostCreate,PostReturn
+from app.db import Post,create_db_and_tables, get_async_session
+from sqlalchemy.ext.asyncio import AsyncSession
+from contextlib import asynccontextmanager
+
+@asynccontextmanager
+async def lifespan(app : FastAPI):
+    await create_db_and_tables()
+    yield
 
 
-app = FastAPI()
+app = FastAPI(lifespan = lifespan)
 
 posts = {
     1: {
@@ -60,7 +68,7 @@ def get_post(id:int):
     return posts.get(id)
 
 @app.post("/posts")
-def post_posts(post : PostCreate):
+def post_posts(post : PostCreate) -> PostReturn:
     newPost = {"title" : post.title , "content" : post.content}
     posts[max(posts.keys()) + 1] = newPost
     return newPost
