@@ -18,7 +18,7 @@ engine = create_engine(
 LocalSession = sessionmaker(
     bind = engine,
     autocommit = False,
-    autoFlush = False
+    autoflush = False
 )
 
 
@@ -29,3 +29,6 @@ def get_db():
         yield db
     finally:
         db.close()
+
+
+Base = declarative_base()
