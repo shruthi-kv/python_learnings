@@ -6,7 +6,7 @@ from app.core.db import Base, engine
 import app.models.expense
 import app.models.user
 from app.routers.expense import expense_router
-
+from app.routers.user import user_router
 
 @asynccontextmanager
 async def lifespan(_: FastAPI) -> AsyncIterator[None]:
@@ -16,6 +16,7 @@ async def lifespan(_: FastAPI) -> AsyncIterator[None]:
 
 app = FastAPI(lifespan=lifespan)
 app.include_router(expense_router)
+app.include_router(user_router)
 
 @app.get("/")
 def root():
